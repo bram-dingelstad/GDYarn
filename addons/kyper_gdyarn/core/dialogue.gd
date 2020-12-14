@@ -1,7 +1,5 @@
 extends Node
 
-
-
 #consts
 const DEFAULT_START :String= "Start"
 
