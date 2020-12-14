@@ -1,7 +1,5 @@
 extends Object
 
-const YarnGlobals = preload("res://addons/kyper_gdyarn/autoloads/execution_states.gd")
-
 const Lexer = preload("res://addons/kyper_gdyarn/core/compiler/lexer.gd")
 const LineInfo = preload("res://addons/kyper_gdyarn/core/program/yarn_line.gd")
 const YarnNode = preload("res://addons/kyper_gdyarn/core/program/yarn_node.gd")

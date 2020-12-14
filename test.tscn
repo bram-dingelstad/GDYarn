@@ -9,11 +9,12 @@
 
 [node name="YarnRunner" type="Node" parent="."]
 script = ExtResource( 2 )
-_yarnFiles = [ "C:/Users/19254/Desktop/Projects/GodotEngine/Yarn/addons/kyper_gdyarn/examples/example1.yarn" ]
+_yarnFiles = [ "/Users/bram/Development/YarnTest/addons/kyper_gdyarn/examples/example1.yarn", "/Users/bram/Development/YarnTest/NewFile.yarn", "/Users/bram/Development/YarnTest/NewFile.yarn" ]
 _autoStart = true
 _variableStorage = NodePath("../storage")
 _displayInterface = NodePath("../TestDisplay")
 _showTokens = true
+_printSyntaxTree = true
 
 [node name="storage" type="Node" parent="."]
 script = ExtResource( 3 )

@@ -1,7 +1,5 @@
 extends Object
 
-const YarnGlobals = preload("res://addons/kyper_gdyarn/autoloads/execution_states.gd")
-
 const LINE_COMENT : String = "//"
 const FORWARD_SLASH : String = "/"
 

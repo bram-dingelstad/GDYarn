@@ -98,8 +98,8 @@ func finish_line(next_line:bool = true):
 	#the use of signals and maybe commmands?
 	# if textDisplay != null:
 	# 	textDisplay.visible = false
-	if(_dialogue.get_exec_state()!=YarnGlobals.ExecutionState.Stopped 
-		&& _dialogue.get_exec_state()!=YarnGlobals.ExecutionState.WaitingForOption):
+	if(_dialogue.get_exec_state() != YarnGlobals.ExecutionState.Stopped 
+		&& _dialogue.get_exec_state() != YarnGlobals.ExecutionState.WaitingForOption):
 		if next_line:
 			_currentLine = ""
 		if _dialogueRunner.next_line.empty():

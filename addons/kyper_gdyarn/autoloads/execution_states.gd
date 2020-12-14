@@ -189,8 +189,8 @@ static func merge_dir(target, patch):
 func token_name(type)->String:
 	var string : String = ""
 	
-	for key in YarnGlobals.TokenType.keys():
-		if YarnGlobals.TokenType[key] == type:
+	for key in TokenType.keys():
+		if TokenType[key] == type:
 			return key					
 	return string
 

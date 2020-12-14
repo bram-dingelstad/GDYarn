@@ -3,7 +3,7 @@ tags:
 colorID: 3
 position: 332,79
 ---
-Hello, what should we set number variable to?
+Oh well hello, what should we set number variable to?
 <<set $visited = visit_count()>>
 -> Set Number to 6
     <<set $number to 6 >>

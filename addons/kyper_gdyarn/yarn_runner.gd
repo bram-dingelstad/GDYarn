@@ -1,8 +1,6 @@
 tool
 extends Node
 
-const YarnGlobals = preload("res://addons/kyper_gdyarn/autoloads/execution_states.gd")
-
 const YarnProgram = preload("res://addons/kyper_gdyarn/core/program/program.gd")
 const YarnCompiler = preload("res://addons/kyper_gdyarn/core/compiler/compiler.gd")
 const LineInfo = preload("res://addons/kyper_gdyarn/core/program/yarn_line.gd")
@@ -10,11 +8,9 @@ const Line = preload("res://addons/kyper_gdyarn/core/dialogue/line.gd")
 const YarnDialogue = preload("res://addons/kyper_gdyarn/core/dialogue.gd")
 const DisplayInterface = preload("res://addons/kyper_gdyarn/yarn_gui.gd")
 
+export(Array, String, FILE, GLOBAL, "*.yarn") var yarn_files setget set_file
 
-# String is a path to a PNG file in the global filesystem.
-export(Array,String, FILE, GLOBAL, "*.yarn") var _yarnFiles setget set_file
-
-export(String) var _startNode = "Start"
+export(String) var start_node = "Start"
 
 export(bool) var _autoStart = false
 
@@ -24,7 +20,6 @@ export(NodePath) var _displayInterface
 
 export(bool) var _showTokens = false
 export(bool) var _printSyntaxTree = false
-
 
 #programs
 var programs : Array = []#YarnProgram
@@ -45,11 +40,7 @@ var commandHandlers :  Dictionary = {} #funcRef map for text commands
 
 
 func _ready():
-	if Engine.editor_hint:
-		#connect("script_changed",self,"set_file")
-
-		pass 
-	else:
+	if not Engine.editor_hint:
 		#inside the editor
 		_dialogue = YarnDialogue.new(get_node(_variableStorage))
 		_dialogue.get_vm().lineHandler = funcref(self,"_handle_line")
@@ -70,7 +61,6 @@ func _ready():
 
 		if(_autoStart):
 			start()
-		pass
 
 
 func _process(delta):
@@ -83,8 +73,8 @@ func _process(delta):
 
 
 func set_file(arr):
-	if arr.size() != _yarnFiles.size():
-		if arr.size() > _yarnFiles.size(): 
+	if arr.size() != yarn_files.size():
+		if arr.size() > yarn_files.size(): 
 			#case where we added a new script
 			#assume it was added at the end
 			if (!arr.back().empty()):
@@ -99,8 +89,8 @@ func set_file(arr):
 			#we have to figure out which one is the
 			#one we removed and also get rid of the program
 			var index:int = -1
-			for i in range(_yarnFiles.size()):
-				if !(_yarnFiles[i] in arr):
+			for i in range(yarn_files.size()):
+				if !(yarn_files[i] in arr):
 					index = i
 					break
 			if index != -1:
@@ -123,7 +113,7 @@ func set_file(arr):
 				else:
 					programs.insert(index,_load_program(source,arr.back()))
 				
-	_yarnFiles=arr
+	yarn_files=arr
 
 
 func add_command_handler(command:String,handler:FuncRef):
@@ -133,8 +123,8 @@ func add_command_handler(command:String,handler:FuncRef):
 
 #get the change so we can load/unload
 func _get_diff(newOne:Array,offset:int = 0)->int:
-	for i in range(offset,_yarnFiles.size()):
-		if _yarnFiles[i] != newOne[i]:
+	for i in range(offset,yarn_files.size()):
+		if yarn_files[i] != newOne[i]:
 			return i
 	return -1
 
@@ -191,7 +181,7 @@ func _handle_node_complete(node:String):
 	return YarnGlobals.HandlerState.ContinueExecution
 	
 
-func start(node : String = _startNode):
+func start(node : String = start_node):
 	if(_dialogueStarted):
 		return 
 	_dialogueStarted = true
