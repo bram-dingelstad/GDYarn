@@ -1,4 +1,10 @@
-tool extends Node
+tool
+extends Node
+
+signal node_running(node)
+signal command(command)
+signal node_completed(node)
+signal finished
 
 # TODO: Try to tidy this up
 const YarnProgram = preload("res://addons/kyper_gdyarn/core/program/program.gd")
@@ -13,11 +19,10 @@ export(NodePath) var display_interface_path
 
 onready var display = get_node(display_interface_path)
 
-var locales = {}
 var program
 
 var dialogue
-var dialogue_started = false
+var running = false
 
 var next_line = ""
 
@@ -42,7 +47,7 @@ func _ready():
 func _process(delta):
 	if not Engine.editor_hint:
 		var state = dialogue.get_exec_state()
-		if dialogue_started and \
+		if running and \
 			state != YarnGlobals.ExecutionState.WaitingForOption and \
 			state != YarnGlobals.ExecutionState.Suspended:
 			dialogue.resume()
@@ -52,61 +57,48 @@ func set_path(_path):
 	file.open(_path, File.READ)
 	var source = file.get_as_text()
 	file.close()
-
+	
 	program = _load_program(source, _path)
 	path = _path
 
 func _load_program(source, file_name):
 	var program = YarnProgram.new()
-	YarnCompiler.compile_string(source, file_name, program, locales, false, false)
+	YarnCompiler.compile_string(source, file_name, program, {}, false, false)
 	return program
 
 func _handle_line(line):
-	var text =  locales.get(line.id).text;
-	_pass_line(text)
-
+	emit_signal('line', line)
 	return YarnGlobals.HandlerState.PauseExecution
 
-func consume_line():
-	_pass_line(next_line)
-	next_line = ""
-
-func _pass_line(line_text):
-	if display != null and \
-		not display.feed_line(line_text):
-		next_line = line_text
-
 func _handle_command(command):
+	emit_signal('command', command)
 	return YarnGlobals.HandlerState.ContinueExecution
 
-func _handle_options(option_set):
-	if not display:
-		return
-
-	var line_options = []
-	for index in range(option_set.options.size()):
-		line_options.append(locales[option_set.options[index].line.id].text)
-
-	display.feed_options(line_options)
+func _handle_options(options):
+	emit_signal('options', options)
 
 func _handle_dialogue_complete():
-	if display != null:
-		display._dialogue_finished()
-	dialogue_started = false
+	emit_signal('finished')
+	running = false
 
 func _handle_node_start(node):
+	emit_signal('node_running', node)
+
 	if !dialogue._visitedNodeCount.has(node):
 		dialogue._visitedNodeCount[node] = 1
 	else:
 		dialogue._visitedNodeCount[node]+=1
 
 func _handle_node_complete(node):
+	emit_signal('node_completed', node)
 	return YarnGlobals.HandlerState.ContinueExecution
 
 func start(node = start_node):
-	if dialogue_started:
+	if running:
 		return 
 
-	dialogue_started = true
+	emit_signal('running')
+
+	running = true
 	dialogue.set_node(node)
 
