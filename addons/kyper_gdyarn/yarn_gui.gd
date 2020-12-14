@@ -106,10 +106,6 @@ func finish_line(next_line:bool = true):
 			_dialogue.resume()
 		else:
 			_dialogueRunner.consume_line()
-			
-
-
-			
 	pass
 
 func feed_options(options:Array):

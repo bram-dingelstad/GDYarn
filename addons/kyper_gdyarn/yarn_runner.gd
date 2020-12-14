@@ -3,10 +3,7 @@ tool extends Node
 # TODO: Try to tidy this up
 const YarnProgram = preload("res://addons/kyper_gdyarn/core/program/program.gd")
 const YarnCompiler = preload("res://addons/kyper_gdyarn/core/compiler/compiler.gd")
-const LineInfo = preload("res://addons/kyper_gdyarn/core/program/yarn_line.gd")
-const Line = preload("res://addons/kyper_gdyarn/core/dialogue/line.gd")
 const YarnDialogue = preload("res://addons/kyper_gdyarn/core/dialogue.gd")
-const DisplayInterface = preload("res://addons/kyper_gdyarn/yarn_gui.gd")
 
 export(String, FILE, GLOBAL, "*.yarn") var path setget set_path
 export(String) var start_node = "Start"
