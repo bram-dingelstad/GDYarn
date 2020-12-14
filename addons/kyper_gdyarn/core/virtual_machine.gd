@@ -1,5 +1,4 @@
 extends Node
-
 var YarnGlobals = load("res://addons/kyper_gdyarn/autoloads/execution_states.gd")
 
 var FunctionInfo = load("res://addons/kyper_gdyarn/core/function_info.gd")
@@ -31,6 +30,8 @@ var _currentNode
 
 var executionState = YarnGlobals.ExecutionState.Stopped
 
+var string_table = {}
+
 func _init(dialogue):
 	self._dialogue = dialogue
 	_state = VmState.new()
@@ -53,7 +54,7 @@ func set_node(name:String)->bool:
 		printerr("No node named %s has been loaded" % name)
 		return false
 
-	_dialogue.dlog("Running node %s"+name)
+	_dialogue.dlog("Running node %s" % name)
 
 	_currentNode = _program.yarnNodes[name]
 	reset()
@@ -137,7 +138,6 @@ func resume()->bool:
 	
 	#execute instruction until something cool happens
 	while executionState == YarnGlobals.ExecutionState.Running:
-		#print(_currentNode.nodeName)
 		var currentInstruction = _currentNode.instructions[_state.programCounter]
 
 		run_instruction(currentInstruction)
@@ -172,7 +172,7 @@ func run_instruction(instruction)->bool:
 			#pass it to client as line
 			var key : String = instruction.operands[0].value
 
-			var line = Line.new(key)
+			var line = Line.new(key, _program.yarnStrings[key])
 
 			#the second operand is the expression count 
 			# of format function

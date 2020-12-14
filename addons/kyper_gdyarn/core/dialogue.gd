@@ -47,11 +47,9 @@ func _init(variableStorage):
 
 func dlog(message:String):
 	print("YARN_DEBUG : %s" % message)
-	pass
 
 func elog(message:String):
 	print("YARN_ERROR : %s" % message)
-	pass
 
 func is_active()->bool:
 	return get_exec_state() != YarnGlobals.ExecutionState.Stopped
@@ -73,7 +71,6 @@ func resume():
 
 func stop():
 	_vm.stop()
-	pass
 
 func get_all_nodes()->Array:
 	return _program.yarnNodes.keys()
@@ -90,9 +87,6 @@ func get_node_id(name:String)->String:
 	else:
 		_errLog.call_func("No node named [%s] exists" % name)
 		return ""
-
-func get_program_strings()->Dictionary:
-	return _program.yarnStrings
 
 func unloadAll(clear_visited:bool = true):
 	if clear_visited :
@@ -113,15 +107,8 @@ func set_program(program):
 func get_program():
 	return _program
 
-func add_program(program):
-	if _program == null:
-		set_program(program)
-	else:
-		_program = YarnGlobals.combine_programs([_program,program])
-
 func analyze(context):
 	print("sike: not implemented")
-	pass
 
 func get_vm()->VirtualMachine:
 	return _vm

@@ -25,7 +25,6 @@ var _lastError : int
 #-----Class vars
 var _currentNode : YarnNode
 var _rawText : bool
-var _program : YarnProgram
 var _fileName : String
 var _containsImplicitStringTags : bool
 var _labelCount : int = 0
@@ -36,14 +35,12 @@ var _stringCount : int = 0
 #<int, YarnGlobals.TokenType>
 var _tokens : Dictionary = {}
 
-static func compile_string(source:String,filename,program:YarnProgram,strings:Dictionary,showTokens:bool = false,printTree : bool = false)->int:
-	
+static func compile_string(source: String, filename: String) -> YarnProgram:
 	var Parser = load("res://addons/kyper_gdyarn/core/compiler/parser.gd")
 	var Compiler = load("res://addons/kyper_gdyarn/core/compiler/compiler.gd")
 
 	var compiler = Compiler.new()
 	compiler._fileName = filename
-
 
 	#--------------Nodes
 	var headerSep : RegEx = RegEx.new()
@@ -51,11 +48,7 @@ static func compile_string(source:String,filename,program:YarnProgram,strings:Di
 	var headerProperty : RegEx = RegEx.new()
 	headerProperty.compile("(?<field>.*): *(?<value>.*)")
 
-
-	#check for atleast one node start
-	if !headerSep.search(source):
-		printerr("Error parsing yarn input : No headers found")
-		return -1 #return more specific error code
+	assert(not not headerSep.search(source), "No headers found")
 	
 	var lineNumber: int = 0 
 	
@@ -107,13 +100,9 @@ static func compile_string(source:String,filename,program:YarnProgram,strings:Di
 		var lexer = Lexer.new()
 
 		var tokens : Array = lexer.tokenize(body)
-		if(showTokens):
-			print_tokens(tokens)
 		var parser = Parser.new(tokens)
 
 		var parserNode = parser.parse_node()
-		if printTree:
-			print(parserNode.tree_string(0))
 
 		parserNode.name = title
 		parsedNodes.append(parserNode)
@@ -122,23 +111,20 @@ static func compile_string(source:String,filename,program:YarnProgram,strings:Di
 
 	#--- End parsing nodes---
 
+	var program = YarnProgram.new()
 	#compile nodes
 	for node in parsedNodes:
-		compiler.compile_node(program,node)
+		compiler.compile_node(program, node)
 
-	merge_dir(strings,compiler._stringTable)
-			
+	for key in compiler._stringTable:
+		program.yarnStrings[key] = compiler._stringTable[key]
 
-	return 0
-
-static func merge_dir(target, patch):
-		for key in patch:
-			target[key] = patch[key]
+	return program
 
 func compile_node(program:YarnProgram,parsedNode)->void:
 	if program.yarnNodes.has(parsedNode.name):
 		emit_error(DUPLICATE_NODES_IN_PROGRAM)
-		printerr("Duplicate node in program: %s"%parsedNode.name)
+		printerr("Duplicate node in program: %s" % parsedNode.name)
 	else:
 		var nodeCompiled : YarnNode = YarnNode.new()
 
@@ -220,13 +206,12 @@ func emit(bytecode,node:YarnNode=_currentNode,operands:Array=[]):
 	# print("emitting instruction to %s"%node.nodeName)
 
 	if(node == null):
-		printerr("trying to emit to null node with byteCode: %s"%bytecode)
+		printerr("trying to emit to null node with byteCode: %s" % bytecode)
 		return;
 	node.instructions.append(instruction)
 	if bytecode == YarnGlobals.ByteCode.Label : 
 		#add to label table
 		node.labels[instruction.operands[0].value] = node.instructions.size()-1
-	pass
 
 
 func get_string_tokens()->Array:
@@ -259,8 +244,6 @@ func generate_statement(node,statement):
 		_:
 			emit_error(ERR_COMPILATION_FAILED)
 			printerr("illegal statement type [%s]- could not generate code" % statement.type)
-
-	pass
 
 #compile instructions for custom commands
 func generate_custom_command(node,command):
@@ -447,8 +430,6 @@ func generate_expression(node,expression):
 			emit(YarnGlobals.ByteCode.CallFunc,node,[Operand.new(expression.function)])
 		_:
 			printerr("no expression")
-			
-	pass
 
 #compile value instructions
 func generate_value(node,value):
