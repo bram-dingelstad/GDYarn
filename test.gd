@@ -8,7 +8,7 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var regex : RegEx = RegEx.new()
+	var regex = RegEx.new()
 	var pat = "\"([^\"\\\\]*(?:\\.[^\"\\\\]*)*)\""
 	var _ok = regex.compile(pat)
 	var test = " this is a test string \"Hello World!\" and this anotherone <\"HAHAHAHAHAH  \">"
@@ -23,9 +23,4 @@ func _ready():
 
 	print("this is it fam \\\\".replace("\\\\","\\"))
 
-	print(varArgFunc([1,2,3,4,5,6]))
-
-
-func varArgFunc(args:Array)->int:
-	return args.size()
-	
+	print([1,2,3,4,5,6].size())

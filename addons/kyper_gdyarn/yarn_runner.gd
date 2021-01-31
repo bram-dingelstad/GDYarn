@@ -73,11 +73,14 @@ func _handle_node_start(node):
 	if !dialogue._visitedNodeCount.has(node):
 		dialogue._visitedNodeCount[node] = 1
 	else:
-		dialogue._visitedNodeCount[node]+=1
+		dialogue._visitedNodeCount[node] += 1
 
 func _handle_node_complete(node):
 	emit_signal('node_completed', node)
 	return YarnGlobals.HandlerState.PauseExecution
+
+func select_option(id):
+	dialogue.get_vm().set_selected_option(id)
 
 func start(node = start_node):
 	if running:

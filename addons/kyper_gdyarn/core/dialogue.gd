@@ -1,12 +1,8 @@
 extends Node
 
-#consts
-const DEFAULT_START :String= "Start"
+const DEFAULT_START = "Start"
+const FMF_PLACEHOLDE = "<VALUE PLACEHOLDER>"
 
-#future format function support
-const FMF_PLACEHOLDER:String = "<VALUE PLACEHOLDER>"
-
-#classes
 const StandardLibrary = preload("res://addons/kyper_gdyarn/core/libraries/standard.gd")
 const VirtualMachine = preload("res://addons/kyper_gdyarn/core/virtual_machine.gd")
 const YarnLibrary = preload("res://addons/kyper_gdyarn/core/library.gd")
@@ -14,11 +10,11 @@ const YarnProgram = preload("res://addons/kyper_gdyarn/core/program/program.gd")
 
 var _variableStorage 
 
-var _debugLog : FuncRef
-var _errLog : FuncRef
+var _debugLog
+var _errLog
 
-var _program : YarnProgram
-var library : YarnLibrary
+var _program
+var library
 
 var _vm : VirtualMachine
 
@@ -72,13 +68,13 @@ func resume():
 func stop():
 	_vm.stop()
 
-func get_all_nodes()->Array:
+func get_all_nodes():
 	return _program.yarnNodes.keys()
 
-func current_node()->String:
+func current_node():
 	return _vm.get_current()
 
-func get_node_id(name:String)->String:
+func get_node_id(name):
 	if _program.nodes.size() == 0:
 		_errLog.call_func("No nodes loaded")
 		return ""
@@ -107,10 +103,7 @@ func set_program(program):
 func get_program():
 	return _program
 
-func analyze(context):
-	print("sike: not implemented")
-
-func get_vm()->VirtualMachine:
+func get_vm():
 	return _vm
 
 func is_node_visited(node:String=_vm.current_node_name())->bool:

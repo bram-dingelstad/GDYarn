@@ -9,18 +9,18 @@ var Instruction = load("res://addons/kyper_gdyarn/core/program/instruction.gd")
 var Line = load("res://addons/kyper_gdyarn/core/dialogue/line.gd")
 var Command = load("res://addons/kyper_gdyarn/core/dialogue/command.gd")
 var Option = load("res://addons/kyper_gdyarn/core/dialogue/option.gd")
-var OptionSet = load("res://addons/kyper_gdyarn/core/dialogue/option_set.gd")
 
 const EXECUTION_COMPLETE : String = "execution_complete_command"
 
 var NULL_VALUE = Value.new(null)
 
-var lineHandler: FuncRef
-var optionsHandler:FuncRef
-var commandHandler:FuncRef
-var nodeStartHandler:FuncRef
-var nodeCompleteHandler:FuncRef
-var dialogueCompleteHandler:FuncRef
+# Function references to handlers
+var lineHandler
+var optionsHandler
+var commandHandler
+var nodeStartHandler
+var nodeCompleteHandler
+var dialogueCompleteHandler
 
 var _dialogue 
 var _program 
@@ -78,17 +78,16 @@ func stop():
 #set the currently selected option and 
 #resume execution if waiting for result
 #return false if error
-func set_selected_option(id:int)->bool:
-
+func set_selected_option(id):
 	if executionState != YarnGlobals.ExecutionState.WaitingForOption:
-		printerr("Unable to select option when dialogue not waitinf for option")
+		printerr("Unable to select option when dialogue not waiting for option")
 		return false
 
 	if id < 0 || id >= _state.currentOptions.size():
 		printerr("%d is not a valid option "%id)
 		return false
 
-	var destination : String = _state.currentOptions[id].value
+	var destination = _state.currentOptions[id].value
 	_state.push_value(destination)
 	_state.currentOptions.clear()
 
@@ -99,7 +98,7 @@ func set_selected_option(id:int)->bool:
 
 
 func has_options()->bool:
-	return _state.currentOptions.size()>0
+	return _state.currentOptions.size() > 0
 
 func reset():
 	_state = VmState.new()
@@ -120,17 +119,17 @@ func resume()->bool:
 		return false
 	
 	if optionsHandler == null :
-		printerr("Cannot run withour an optionsHandler")	
+		printerr("Cannot run without an optionsHandler")	
 		return false
 
 	if commandHandler == null :
-		printerr("Cannot run withour an commandHandler")	
+		printerr("Cannot run without an commandHandler")	
 		return false
 	if nodeStartHandler == null :
-		printerr("Cannot run withour a nodeStartHandler")	
+		printerr("Cannot run without a nodeStartHandler")	
 		return false
 	if nodeCompleteHandler == null :
-		printerr("Cannot run withour an nodeCompleteHandler")	
+		printerr("Cannot run without an nodeCompleteHandler")	
 		return false
 
 
@@ -170,7 +169,7 @@ func run_instruction(instruction)->bool:
 		YarnGlobals.ByteCode.RunLine:
 			#look up string from string table
 			#pass it to client as line
-			var key : String = instruction.operands[0].value
+			var key = instruction.operands[0].value
 
 			var line = Line.new(key, _program.yarnStrings[key])
 
@@ -297,7 +296,9 @@ func run_instruction(instruction)->bool:
 
 		YarnGlobals.ByteCode.AddOption:
 			# add an option to current state
-			var line  = Line.new(instruction.operands[0].value)
+			var key = instruction.operands[0].value
+
+			var line  = Line.new(key, _program.yarnStrings[key])
 
 			if instruction.operands.size() > 2:
 				pass #formated text options
@@ -316,7 +317,7 @@ func run_instruction(instruction)->bool:
 			var choices : Array = []#Option
 			for optionIndex in range(_state.currentOptions.size()):
 				var option : SimpleEntry = _state.currentOptions[optionIndex]
-				choices.append(Option.new(option.key,optionIndex,option.value))
+				choices.append(Option.new(option.key, optionIndex, option.value))
 
 			#we cant continue until option chosen
 			executionState = YarnGlobals.ExecutionState.WaitingForOption
@@ -325,7 +326,7 @@ func run_instruction(instruction)->bool:
 			#delegate for them to call 
 			#when user makes selection
 
-			optionsHandler.call_func(OptionSet.new(choices))
+			optionsHandler.call_func(choices)
 			pass
 		_:
 			#bytecode messed up woopsise

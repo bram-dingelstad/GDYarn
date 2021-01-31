@@ -9,4 +9,3 @@ var info : LineInfo
 func _init(id: String, info: LineInfo):
     self.id = id
     self.info = info
-    

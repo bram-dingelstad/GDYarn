@@ -13,7 +13,6 @@ func get_function(name:String)->FunctionInfo:
 
 func import_library(other)->void:
 	YarnGlobals.merge_dir(functions,other.functions)
-	
 
 func register_function(name:String,paramCount : int, function:FuncRef,returnsValue:bool)->void:
 	var functionInfo : FunctionInfo = FunctionInfo.new(name,paramCount,function,returnsValue)

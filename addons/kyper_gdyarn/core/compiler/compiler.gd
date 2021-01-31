@@ -12,12 +12,12 @@ const Operand = preload("res://addons/kyper_gdyarn/core/program/operand.gd")
 const INVALIDTITLENAME = "[\\[<>\\]{}\\|:\\s#\\$]"
 
 #ERROR Codes
-const NO_ERROR : int = 0x00
-const LEXER_FAILURE : int = 0x01
-const PARSER_FAILURE : int = 0x02
-const INVALID_HEADER : int = 0x04
-const DUPLICATE_NODES_IN_PROGRAM : int = 0x08
-const ERR_COMPILATION_FAILED : int = 0x10
+const NO_ERROR = 0x00
+const LEXER_FAILURE = 0x01
+const PARSER_FAILURE = 0x02
+const INVALID_HEADER = 0x04
+const DUPLICATE_NODES_IN_PROGRAM = 0x08
+const ERR_COMPILATION_FAILED = 0x10
 
 var _errors : int
 var _lastError : int
@@ -58,10 +58,6 @@ static func compile_string(source: String, filename: String) -> YarnProgram:
 
 	var parsedNodes : Array = []
 	
-	# print("sourceLines:")
-	# for line in sourceLines:
-	# 	print(line)
-
 	while lineNumber < sourceLines.size():
 		
 		var title : String 
@@ -70,7 +66,6 @@ static func compile_string(source: String, filename: String) -> YarnProgram:
 		#get title
 		while true:
 			var line : String = sourceLines[lineNumber]
-			# print(sourceLines[lineNumber])
 			lineNumber+=1
 			
 			if !line.empty():
@@ -87,6 +82,7 @@ static func compile_string(source: String, filename: String) -> YarnProgram:
 
 		
 		lineNumber+=1
+
 		#past header
 		var bodyLines : PoolStringArray = []
 		
@@ -112,6 +108,7 @@ static func compile_string(source: String, filename: String) -> YarnProgram:
 	#--- End parsing nodes---
 
 	var program = YarnProgram.new()
+
 	#compile nodes
 	for node in parsedNodes:
 		compiler.compile_node(program, node)
@@ -166,9 +163,6 @@ func compile_node(program:YarnProgram,parsedNode)->void:
 
 			
 		program.yarnNodes[nodeCompiled.nodeName] = nodeCompiled
-
-		
-
 
 func register_string(text:String,nodeName:String,id:String="",lineNumber:int=-1,tags:Array=[])->String:
 	var lineIdUsed : String
@@ -257,17 +251,12 @@ func generate_custom_command(node,command):
 			emit(YarnGlobals.ByteCode.Stop,node)
 		else :
 			emit(YarnGlobals.ByteCode.RunCommand,node,[Operand.new(commandString)])
-		
 
 #compile instructions for linetags and use them 
 # \#line:number
 func generate_line(node,statement,line:String):
-	#print("generating line")
-	#do something g with line tags?? maybe someday
-	
 	var num : String = register_string(line,node.nodeName,"",statement.lineNumber,[]);
 	emit(YarnGlobals.ByteCode.RunLine,node,[Operand.new(num)])
-
 
 func generate_shortcut_group(node,shortcutGroup):
 	# print("generating shortcutoptopn group")

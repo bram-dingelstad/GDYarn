@@ -1,18 +1,22 @@
 extends Node
 
+signal values_changed
+
 const Value = preload("res://addons/kyper_gdyarn/core/value.gd")
 
+var variables = {}
 
-var variables : Dictionary = {}# String,Value
-
-func set_value(name:String,value:Value):
+func set_value(name, value):
     if !(value is Value):
         variables[name] = Value.new(value)
     else:
         variables[name] = value
 
-func get_value(name:String)->Value:
+    emit_signal('values_changed')
+
+func get_value(name):
     return variables[name] if variables.has(name) else null
 
 func clear_values():
     variables.clear()
+    emit_signal('values_changed')
