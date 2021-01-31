@@ -3,6 +3,7 @@
 ## Todo's
 
 - [x] Make most emitters emit relevant contextual information like lines
+- [ ] Make YarnRunner icon reasonably sized
 - [ ] Improve general code styling
 - [ ] Make YarnRunner default implementation with sane defaults
 - [ ] Rework data types to be closer to native gdscript types like dicts
