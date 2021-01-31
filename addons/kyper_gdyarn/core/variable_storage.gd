@@ -7,6 +7,7 @@ const Value = preload("res://addons/kyper_gdyarn/core/value.gd")
 var variables = {}
 
 func set_value(name, value):
+    print('SETTING VALUES %s: %s' % [name, value]) 
     if !(value is Value):
         variables[name] = Value.new(value)
     else:
