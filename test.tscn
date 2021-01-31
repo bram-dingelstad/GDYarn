@@ -15,6 +15,7 @@ __meta__ = {
 [node name="YarnRunner" type="Node" parent="."]
 script = ExtResource( 2 )
 path = "res://addons/kyper_gdyarn/examples/example1.yarn"
+start_node = "Start"
 auto_start = true
 variable_storage_path = NodePath("../Storage")
 
@@ -49,8 +50,8 @@ __meta__ = {
 [node name="StorageDisplay" type="Label" parent="Display"]
 margin_left = 14.0
 margin_top = 310.0
-margin_right = 133.0
-margin_bottom = 510.0
+margin_right = 548.0
+margin_bottom = 421.0
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false

@@ -8,7 +8,7 @@ var Autoloads : Dictionary = {
 
 var Nodes : Dictionary = {
 	#name            #parent         #script                                     #icon
-	"YarnRunner" : ["Node" , "res://addons/kyper_gdyarn/yarn_runner.gd", "res://addons/kyper_gdyarn/assets/runner.PNG"],
+	"YarnRunner" : ["Node" , "res://addons/kyper_gdyarn/yarn_runner.gd", "res://addons/kyper_gdyarn/assets/icon.png"],
 }
 
 func _enter_tree():

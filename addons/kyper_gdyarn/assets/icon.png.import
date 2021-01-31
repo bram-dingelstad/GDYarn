@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/runner.PNG-4aa1326272eeeb5629137dc6b5640940.stex"
+path="res://.import/icon.png-950197166b2776a3172174639dde632e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/kyper_gdyarn/assets/runner.PNG"
-dest_files=[ "res://.import/runner.PNG-4aa1326272eeeb5629137dc6b5640940.stex" ]
+source_file="res://addons/kyper_gdyarn/assets/icon.png"
+dest_files=[ "res://.import/icon.png-950197166b2776a3172174639dde632e.stex" ]
 
 [params]
 
